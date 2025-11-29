@@ -1,0 +1,38 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sport-booking-backend
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:sport_booking_db}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        # �p Hibernate l?u gi? xu?ng DB theo chu?n UTC
+        jdbc:
+          time_zone: UTC
+
+  jackson:
+    # Tr? v? format chu?n ISO-8601 (c� ch? Z ? cu?i)
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSS'Z'
+    time-zone: UTC
+    default-property-inclusion: non_null
+
+logging:
+  level:
+    root: INFO
+    com.dqhieuse: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}

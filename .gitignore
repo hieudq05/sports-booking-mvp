@@ -1,0 +1,77 @@
+# =======================================================
+# 1. SECRETS & ENVIRONMENT (QUAN TRỌNG NHẤT)
+# =======================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =======================================================
+# 2. OS & SYSTEM FILES (Rác hệ điều hành)
+# =======================================================
+.DS_Store
+Thumbs.db
+.agent
+.github
+
+# =======================================================
+# 3. DOCKER & LOCAL DATA (Dành cho dự án này)
+# =======================================================
+# Thư mục chứa data database khi chạy docker-compose
+postgres-data/
+
+# =======================================================
+# 4. BACKEND - JAVA / MAVEN
+# =======================================================
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.log
+*.jar
+*.war
+
+# =======================================================
+# 5. FRONTEND - NODEJS / REACT / VITE
+# =======================================================
+node_modules/
+# Vite build output
+dist/
+build/
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =======================================================
+# 6. IDEs & EDITORS (Cấu hình riêng của từng Dev)
+# =======================================================
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### STS (Spring Tool Suite) ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+!**/src/main/**/build/
+!**/src/test/**/build/
