@@ -36,3 +36,6 @@ logging:
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION}
+
+fe:
+  base-url: ${FE_BASE_URL}
