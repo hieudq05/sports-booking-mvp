@@ -2,17 +2,19 @@
 # 1. SECRETS & ENVIRONMENT (QUAN TRỌNG NHẤT)
 # =======================================================
 .env
+.env.*
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+*.local
+!.env.example
 
 # =======================================================
 # 2. OS & SYSTEM FILES (Rác hệ điều hành)
 # =======================================================
 .DS_Store
 Thumbs.db
-.agent
 .github
 
 # =======================================================
@@ -39,12 +41,15 @@ target/
 node_modules/
 # Vite build output
 dist/
+dist-ssr
 build/
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
+logs
 
 # =======================================================
 # 6. IDEs & EDITORS (Cấu hình riêng của từng Dev)
@@ -57,7 +62,8 @@ pnpm-debug.log*
 *.ipr
 
 ### VS Code ###
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 
 ### STS (Spring Tool Suite) ###
 .apt_generated
@@ -75,3 +81,10 @@ pnpm-debug.log*
 /.nb-gradle/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+### Visual Studio & Vim ###
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
