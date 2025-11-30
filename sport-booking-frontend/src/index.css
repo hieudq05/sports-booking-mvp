@@ -118,6 +118,8 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+  body, input, button, select, textarea {
     font-size: 0.97rem;
   }
   body {
