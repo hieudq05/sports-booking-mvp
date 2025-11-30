@@ -1,4 +1,4 @@
-import { LogOut, User } from 'lucide-react';
+import { CircleUser, LogOut, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -10,9 +10,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { useLogout } from '@/features/auth/hooks/useLogout';
 
 export const Header = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+  const { mutate: logout, isPending } = useLogout();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -48,7 +50,11 @@ export const Header = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer">
+              <CircleUser className="mr-2 h-4 w-4" />
+              <span>Tài khoản</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem disabled={isPending} onClick={handleLogout} className="cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
               <span>Đăng xuất</span>
             </DropdownMenuItem>

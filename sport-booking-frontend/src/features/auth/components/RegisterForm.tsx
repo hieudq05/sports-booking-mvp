@@ -24,53 +24,55 @@ export const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" {...field('username')} />
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <div className='flex flex-col gap-2'>
+        <Label htmlFor="username" className='ml-2 text-muted-foreground'>Username</Label>
+        <Input id="username" {...field('username')} placeholder="Nhập tên người dùng"/>
         {errors.username && (
-          <p className="text-sm text-red-600 mt-1">{errors.username.message}</p>
+          <p className="text-sm text-red-600">{errors.username.message}</p>
         )}
       </div>
 
-      <div>
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" {...field('email')} />
+      <div className='flex flex-col gap-2'>
+        <Label htmlFor="email" className='ml-2 text-muted-foreground'>Email</Label>
+        <Input id="email" type="email" {...field('email')} placeholder="Nhập email" />
         {errors.email && (
           <p className="text-sm text-red-600 mt-1">{errors.email.message}</p>
         )}
       </div>
 
-      <div>
-        <Label htmlFor="fullName">Họ và tên</Label>
-        <Input id="fullName" {...field('fullName')} />
+      <div className='flex flex-col gap-2'>
+        <Label htmlFor="fullName" className='ml-2 text-muted-foreground'>Họ và tên</Label>
+        <Input id="fullName" {...field('fullName')} placeholder="Nhập họ và tên" />
         {errors.fullName && (
           <p className="text-sm text-red-600 mt-1">{errors.fullName.message}</p>
         )}
       </div>
 
-      <div>
-        <Label htmlFor="phoneNumber">Số điện thoại</Label>
-        <Input id="phoneNumber" {...field('phoneNumber')} />
+      <div className='flex flex-col gap-2'>
+        <Label htmlFor="phoneNumber" className='ml-2 text-muted-foreground'>Số điện thoại</Label>
+        <Input id="phoneNumber" {...field('phoneNumber')} placeholder="Nhập số điện thoại" />
         {errors.phoneNumber && (
           <p className="text-sm text-red-600 mt-1">{errors.phoneNumber.message}</p>
         )}
       </div>
 
-      <div>
-        <Label htmlFor="password">Mật khẩu</Label>
-        <Input id="password" type="password" {...field('password')} />
+      <div className='flex gap-4'>
+        <div className='flex flex-col gap-2'>
+        <Label htmlFor="password" className='ml-2 text-muted-foreground'>Mật khẩu</Label>
+        <Input id="password" type="password" {...field('password')} placeholder="Nhập mật khẩu"/>
         {errors.password && (
           <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
         )}
       </div>
 
-      <div>
-        <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
-        <Input id="confirmPassword" type="password" {...field('confirmPassword')} />
+      <div className='flex flex-col gap-2'>
+        <Label htmlFor="confirmPassword" className='ml-2 text-muted-foreground'>Xác nhận mật khẩu</Label>
+        <Input id="confirmPassword" type="password" {...field('confirmPassword')} placeholder="Nhập lại mật khẩu"/>
         {errors.confirmPassword && (
           <p className="text-sm text-red-600 mt-1">{errors.confirmPassword.message}</p>
         )}
+      </div>
       </div>
 
       {error && <p className="text-sm text-red-600">{error.message}</p>}
