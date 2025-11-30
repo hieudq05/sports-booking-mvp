@@ -95,7 +95,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(true)
                 .path("/")
-                .maxAge(Duration.ofMillis(jwtExpiration))
+                .maxAge(Duration.ofMillis(refreshExpiration))
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, newRefreshTokenCookie.toString());
