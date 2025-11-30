@@ -6,7 +6,10 @@ class AuthService {
     async login(data: LoginRequest): Promise<LoginResponse> {
         const response = await axiosInstance.post<ApiResponse<LoginResponse>>(
             "/auth/login", 
-            data
+            data,
+            {
+                withCredentials: true,
+            }
         );
 
         if (response.data.code !== 1000) {
@@ -22,11 +25,43 @@ class AuthService {
             data
         );
 
+        if (response.data.code !== 201) {
+            throw new Error(response.data.msg);
+        }
+
+        return response.data.data;
+    }
+
+    async refreshToken(): Promise<LoginResponse> {
+        const response = await axiosInstance.post<ApiResponse<LoginResponse>>(
+            "/auth/refresh",
+            {},
+            {
+                withCredentials: true,
+            }
+        );
+
         if (response.data.code !== 1000) {
             throw new Error(response.data.msg);
         }
 
         return response.data.data;
+    }
+
+    async logout(): Promise<void> {
+        const response = await axiosInstance.post<ApiResponse<void>>(
+            "/auth/logout",
+            {},
+            {
+                withCredentials: true,
+            }
+        );
+
+        if (response.data.code !== 1000) {
+            throw new Error(response.data.msg);
+        }
+
+        return;
     }
 }
 

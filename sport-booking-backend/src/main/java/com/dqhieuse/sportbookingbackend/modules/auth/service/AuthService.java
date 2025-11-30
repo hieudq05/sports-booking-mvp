@@ -11,17 +11,24 @@ import com.dqhieuse.sportbookingbackend.modules.auth.mapper.UserMapper;
 import com.dqhieuse.sportbookingbackend.modules.auth.repository.UserRepository;
 import com.dqhieuse.sportbookingbackend.modules.auth.utils.JwtUtils;
 import com.dqhieuse.sportbookingbackend.modules.wallet.service.WalletService;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +40,7 @@ public class AuthService {
     private final WalletService walletService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Transactional
     public User register(RegisterRequest registerRequest) {
@@ -73,8 +81,11 @@ public class AuthService {
 
             String token = jwtUtils.generateToken(userDetails);
 
+            String refreshToken = jwtUtils.generateRefreshToken(userDetails);
+
             return LoginResponse.builder()
                     .token(token)
+                    .refreshToken(refreshToken)
                     .username(userDetails.getUsername())
                     .role(userDetails.getAuthorities().iterator().next().getAuthority())
                     .build();
@@ -82,5 +93,43 @@ public class AuthService {
         } catch (AuthenticationException e) {
             throw new AppException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
+    }
+
+    public LoginResponse refreshToken(String refreshToken) {
+        try {
+            final String username = jwtUtils.extractUsername(refreshToken);
+
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+
+            if (!jwtUtils.isTokenValid(refreshToken, userDetails)) {
+                throw new AppException(HttpStatus.UNAUTHORIZED, "Invalid refresh token");
+            }
+
+            String newToken = jwtUtils.generateToken(userDetails);
+
+            String newRefreshToken = jwtUtils.generateRefreshToken(userDetails);
+
+            return LoginResponse.builder()
+                    .role(userDetails.getAuthorities().iterator().next().getAuthority())
+                    .username(userDetails.getUsername())
+                    .token(newToken)
+                    .refreshToken(newRefreshToken)
+                    .build();
+        } catch (ExpiredJwtException e) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "Refresh token expired. Please login again");
+        } catch (UsernameNotFoundException e) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "User not found for the given refresh token");
+        } catch (Exception e) {
+            throw new AppException(HttpStatus.UNAUTHORIZED, "Error occurred while refreshing token.");
+        }
+    }
+
+    public Optional<String> extractRefreshTokenFromCookie(HttpServletRequest request) {
+        if (request.getCookies() == null) return Optional.empty();
+
+        return Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals("refresh_token"))
+                .map(Cookie::getValue)
+                .findFirst();
     }
 }
