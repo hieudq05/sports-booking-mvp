@@ -36,6 +36,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const refreshToken = (data: string) => {
     localStorage.setItem('auth_token', data);
+    if (user) {
+      setUser({ ...user, token: data });
+    }
   };
 
   const logout = () => {
