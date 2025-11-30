@@ -1,6 +1,6 @@
 package com.dqhieuse.sportbookingbackend.modules.venue.entity;
 
-public enum VenueStatus {
-    PENDING,
-
+public enum CourtStatus {
+    AVAILABLE,
+    BOOKED
 }

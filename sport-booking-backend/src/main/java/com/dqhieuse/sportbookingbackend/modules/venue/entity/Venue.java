@@ -3,6 +3,13 @@ package com.dqhieuse.sportbookingbackend.modules.venue.entity;
 import com.dqhieuse.sportbookingbackend.modules.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.Instant;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,7 +44,24 @@ public class Venue {
     @Column(nullable = false)
     private String thumbnail;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
-    private String status;
+    private VenueStatus status;
 
+    @Column(name = "open_time", nullable = false)
+    private LocalTime openTime;
+
+    @Column(name = "close_time", nullable = false)
+    private LocalTime closeTime;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Court> courts = new ArrayList<>();
 }

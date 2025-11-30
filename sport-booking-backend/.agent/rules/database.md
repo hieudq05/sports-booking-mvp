@@ -1,28 +1,19 @@
----
-trigger: always_on
----
-
-# Database
-
-## DATABASE SCHEMA (PostgreSQL)
-
-```bash
 -- =============================================
 -- 1. MODULE AUTH & USER
 -- =============================================
 
 CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL, -- USER, ADMIN, VENDOR
-    status VARCHAR(20), -- BANNED, ACTIVE, UNVERIFIED
-    full_name VARCHAR(100),
-    phone_number VARCHAR(15),
-    -- [SỬA] Dùng TIMESTAMPTZ để lưu mốc thời gian thực
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id BIGSERIAL PRIMARY KEY,
+username VARCHAR(50) UNIQUE NOT NULL,
+email VARCHAR(100) UNIQUE NOT NULL,
+password VARCHAR(255) NOT NULL,
+role VARCHAR(20) NOT NULL, -- USER, ADMIN, VENDOR
+status VARCHAR(20), -- BANNED, ACTIVE, UNVERIFIED
+full_name VARCHAR(100),
+phone_number VARCHAR(15),
+-- [SỬA] Dùng TIMESTAMPTZ để lưu mốc thời gian thực
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- =============================================
@@ -30,23 +21,23 @@ CREATE TABLE users (
 -- =============================================
 
 CREATE TABLE wallets (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL UNIQUE REFERENCES users(id),
-    balance DECIMAL(15, 2) DEFAULT 0 CHECK (balance >= 0),
-    version BIGINT DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id BIGSERIAL PRIMARY KEY,
+user_id BIGINT NOT NULL UNIQUE REFERENCES users(id),
+balance DECIMAL(15, 2) DEFAULT 0 CHECK (balance >= 0),
+version BIGINT DEFAULT 0,
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE TABLE transactions (
-    id BIGSERIAL PRIMARY KEY,
-    wallet_id BIGINT NOT NULL REFERENCES wallets(id),
-    amount DECIMAL(15, 2) NOT NULL,
-    type VARCHAR(30) NOT NULL,
-    booking_id BIGINT,
-    description TEXT,
-    status VARCHAR(20) DEFAULT 'SUCCESS',
-    created_at TIMESTAMPTZ DEFAULT NOW()
+id BIGSERIAL PRIMARY KEY,
+wallet_id BIGINT NOT NULL REFERENCES wallets(id),
+amount DECIMAL(15, 2) NOT NULL,
+type VARCHAR(30) NOT NULL,
+booking_id BIGINT,
+description TEXT,
+status VARCHAR(20) DEFAULT 'SUCCESS',
+created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX idx_transactions_wallet ON transactions(wallet_id);
@@ -56,14 +47,14 @@ CREATE INDEX idx_transactions_wallet ON transactions(wallet_id);
 -- =============================================
 
 CREATE TABLE venues (
-    id BIGSERIAL PRIMARY KEY,
-    owner_id BIGINT NOT NULL REFERENCES users(id),
-    name VARCHAR(100) NOT NULL,
-    address TEXT NOT NULL,
-    district VARCHAR(50),
-    description TEXT,
-    thumbnail TEXT NOT NULL,
-    
+id BIGSERIAL PRIMARY KEY,
+owner_id BIGINT NOT NULL REFERENCES users(id),
+name VARCHAR(100) NOT NULL,
+address TEXT NOT NULL,
+district VARCHAR(50),
+description TEXT,
+thumbnail TEXT NOT NULL,
+
     -- [LƯU Ý] Giờ mở cửa giữ nguyên TIME (Không Timezone)
     -- Vì nó là giờ địa phương (Local Wall-clock time)
     open_time TIME NOT NULL,  
@@ -75,22 +66,25 @@ CREATE TABLE venues (
 );
 
 CREATE TABLE venue_images (
-    id BIGSERIAL PRIMARY KEY,
-    venue_id BIGINT NOT NULL REFERENCES venues(id) ON DELETE CASCADE,
-    image_url TEXT NOT NULL,
-    active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+id BIGSERIAL PRIMARY KEY,
+venue_id BIGINT NOT NULL REFERENCES venues(id) ON DELETE CASCADE,
+image_url TEXT NOT NULL,
+active BOOLEAN DEFAULT TRUE,
+created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 CREATE INDEX idx_venue_images_venue ON venue_images(venue_id);
 
 CREATE TABLE courts (
-    id BIGSERIAL PRIMARY KEY,
-    venue_id BIGINT NOT NULL REFERENCES venues(id),
-    name VARCHAR(50) NOT NULL,
-    type VARCHAR(20),
-    price_per_hour DECIMAL(10, 2) NOT NULL,
-    active BOOLEAN DEFAULT TRUE
+id BIGSERIAL PRIMARY KEY,
+venue_id BIGINT NOT NULL REFERENCES venues(id),
+name VARCHAR(50) NOT NULL,
+type VARCHAR(20) NOT NULL,
+price_per_hour DECIMAL(10, 2) NOT NULL,
+active BOOLEAN DEFAULT TRUE,
+capacity INT NOT NULL,
+thumbnail TEXT NOT NULL,
+version BIGINT DEFAULT 0
 );
 
 -- =============================================
@@ -98,10 +92,10 @@ CREATE TABLE courts (
 -- =============================================
 
 CREATE TABLE bookings (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL REFERENCES users(id),
-    court_id BIGINT NOT NULL REFERENCES courts(id),
-    
+id BIGSERIAL PRIMARY KEY,
+user_id BIGINT NOT NULL REFERENCES users(id),
+court_id BIGINT NOT NULL REFERENCES courts(id),
+
     -- [QUAN TRỌNG] Slot đặt sân phải là tuyệt đối (UTC)
     start_time TIMESTAMPTZ NOT NULL, 
     end_time TIMESTAMPTZ NOT NULL,   
@@ -123,18 +117,19 @@ CREATE INDEX idx_booking_overlap ON bookings(court_id, start_time, end_time);
 -- =============================================
 
 CREATE TABLE disputes (
-    id BIGSERIAL PRIMARY KEY,
-    booking_id BIGINT NOT NULL REFERENCES bookings(id),
-    reporter_id BIGINT NOT NULL REFERENCES users(id),
-    reason TEXT NOT NULL,
-    evidence_image_url TEXT,
-    vendor_response TEXT,
-    status VARCHAR(20) DEFAULT 'PROCESSING',
-    admin_decision VARCHAR(50),
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
+id BIGSERIAL PRIMARY KEY,
+booking_id BIGINT NOT NULL REFERENCES bookings(id),
+reporter_id BIGINT NOT NULL REFERENCES users(id),
+reason TEXT NOT NULL,
+evidence_image_url TEXT,
+vendor_response TEXT,
+status VARCHAR(20) DEFAULT 'PROCESSING',
+admin_decision VARCHAR(50),
+created_at TIMESTAMPTZ DEFAULT NOW(),
+updated_at TIMESTAMPTZ DEFAULT NOW()
 );
-```
+
+---
 
 ## LƯU Ý KỸ THUẬT (Technical Note)
 

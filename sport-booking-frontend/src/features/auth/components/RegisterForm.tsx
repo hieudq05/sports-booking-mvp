@@ -58,21 +58,21 @@ export const RegisterForm = () => {
       </div>
 
       <div className='flex gap-4'>
-        <div className='flex flex-col gap-2'>
-        <Label htmlFor="password" className='ml-2 text-muted-foreground'>Mật khẩu</Label>
-        <Input id="password" type="password" {...field('password')} placeholder="Nhập mật khẩu"/>
-        {errors.password && (
-          <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
-        )}
-      </div>
+        <div className='flex flex-col gap-2 w-full'>
+          <Label htmlFor="password" className='ml-2 text-muted-foreground'>Mật khẩu</Label>
+          <Input id="password" type="password" {...field('password')} placeholder="Nhập mật khẩu"/>
+          {errors.password && (
+            <p className="text-sm text-red-600 mt-1">{errors.password.message}</p>
+          )}
+        </div>
 
-      <div className='flex flex-col gap-2'>
-        <Label htmlFor="confirmPassword" className='ml-2 text-muted-foreground'>Xác nhận mật khẩu</Label>
-        <Input id="confirmPassword" type="password" {...field('confirmPassword')} placeholder="Nhập lại mật khẩu"/>
-        {errors.confirmPassword && (
-          <p className="text-sm text-red-600 mt-1">{errors.confirmPassword.message}</p>
-        )}
-      </div>
+        <div className='flex flex-col gap-2 w-full'>
+          <Label htmlFor="confirmPassword" className='ml-2 text-muted-foreground'>Xác nhận mật khẩu</Label>
+          <Input id="confirmPassword" type="password" {...field('confirmPassword')} placeholder="Nhập lại mật khẩu"/>
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-600 mt-1">{errors.confirmPassword.message}</p>
+          )}
+        </div>
       </div>
 
       {error && <p className="text-sm text-red-600">{error.message}</p>}

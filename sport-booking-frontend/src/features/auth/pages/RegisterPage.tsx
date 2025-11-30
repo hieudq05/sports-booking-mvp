@@ -5,7 +5,7 @@ import { RegisterForm } from '../components/RegisterForm';
 export const RegisterPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-[url('/src/assets/image/login-bg.jpg')] bg-cover bg-center bg-no-repeat">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle className="text-2xl text-center">Đăng ký</CardTitle>
         </CardHeader>
