@@ -54,6 +54,10 @@ public class Venue {
     @Column(name = "close_time", nullable = false)
     private LocalTime closeTime;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User user;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
@@ -64,4 +68,7 @@ public class Venue {
 
     @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Court> courts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VenueImage> images = new ArrayList<>();
 }

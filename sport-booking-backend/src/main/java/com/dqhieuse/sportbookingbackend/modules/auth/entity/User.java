@@ -1,11 +1,17 @@
 package com.dqhieuse.sportbookingbackend.modules.auth.entity;
 
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.Court;
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.CourtImage;
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.Venue;
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.VenueImage;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -50,6 +56,18 @@ public class User {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+    
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Venue> venues = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VenueImage> venueImages = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Court> courts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourtImage> courtImages = new ArrayList<>();
 
     @Override
     public String toString() {

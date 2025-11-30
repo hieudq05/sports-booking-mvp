@@ -1,13 +1,21 @@
 package com.dqhieuse.sportbookingbackend.modules.venue.entity;
 
+import com.dqhieuse.sportbookingbackend.modules.auth.entity.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "courts")
 public class Court {
@@ -44,5 +52,20 @@ public class Court {
     private Long version;
 
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
+
+    @ManyToOne
+    @JoinColumn(name = "created_by", nullable = false)
+    private User user;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private Instant createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Instant updatedAt;
+
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourtImage> courtImages = new ArrayList<>();
 }
