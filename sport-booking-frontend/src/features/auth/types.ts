@@ -1,4 +1,4 @@
-export type Role = 'ROLE_USER' | 'ROLE_VENDOR' | 'ROLE_ADMIN';
+export type Role = 'USER' | 'VENDOR' | 'ADMIN';
 export type UserStatus = 'ACTIVE' | 'BANNED' | 'UNVERIFIED';
 
 export interface LoginRequest {

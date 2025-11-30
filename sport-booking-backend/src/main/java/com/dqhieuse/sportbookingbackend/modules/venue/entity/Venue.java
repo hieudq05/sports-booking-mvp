@@ -54,10 +54,6 @@ public class Venue {
     @Column(name = "close_time", nullable = false)
     private LocalTime closeTime;
 
-    @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
-    private User user;
-
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

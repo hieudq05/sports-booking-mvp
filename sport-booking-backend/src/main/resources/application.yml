@@ -28,6 +28,10 @@ spring:
     time-zone: UTC
     default-property-inclusion: non_null
 
+  mvc:
+    pathmatch:
+      use-trailing-slash-match: true
+
 logging:
   level:
     root: INFO

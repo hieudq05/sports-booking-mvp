@@ -1,4 +1,9 @@
 package com.dqhieuse.sportbookingbackend.modules.venue.repository;
 
-public interface CourtRepository extends org.springframework.data.jpa.repository.JpaRepository<com.dqhieuse.sportbookingbackend.modules.venue.entity.Court, java.lang.Long> {
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.Court;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CourtRepository extends JpaRepository<Court, Long> {
 }

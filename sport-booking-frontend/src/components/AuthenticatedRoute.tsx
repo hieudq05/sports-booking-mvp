@@ -8,11 +8,11 @@ interface Props {
 export const AuthenticatedRoute = ({ children }: Props) => {
   const { isAuthenticated, user } = useAuth();
 
-  if (isAuthenticated && user?.role === "ROLE_USER") {
+  if (isAuthenticated && user?.role === "USER") {
     return <Navigate to="/" replace />;
-  } else if (isAuthenticated && user?.role === "ROLE_VENDOR") {
+  } else if (isAuthenticated && user?.role === "VENDOR") {
     return <Navigate to="/dashboard" replace />;
-  } else if (isAuthenticated && user?.role === "ROLE_ADMIN") {
+  } else if (isAuthenticated && user?.role === "ADMIN") {
     return <Navigate to="/admin" replace />;
   }
 
