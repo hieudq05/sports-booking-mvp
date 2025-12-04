@@ -1,18 +1,23 @@
 import axiosInstance from "@/lib/axios";
-import type { LoginRequest, LoginResponse, RegisterRequest, UserResponse } from "../types";
+import type {
+    LoginRequest,
+    LoginResponse,
+    RegisterRequest,
+    UserResponse,
+} from "../types";
 import type { ApiResponse } from "@/types/api";
 
 class AuthService {
     async login(data: LoginRequest): Promise<LoginResponse> {
         const response = await axiosInstance.post<ApiResponse<LoginResponse>>(
-            "/auth/login", 
+            "/auth/login",
             data,
             {
                 withCredentials: true,
             }
         );
 
-        if (response.data.code !== 1000) {
+        if (response.data.status !== "OK") {
             throw new Error(response.data.msg);
         }
 
@@ -21,11 +26,11 @@ class AuthService {
 
     async register(data: RegisterRequest): Promise<UserResponse> {
         const response = await axiosInstance.post<ApiResponse<UserResponse>>(
-            "/auth/register", 
+            "/auth/register",
             data
         );
 
-        if (response.data.code !== 201) {
+        if (response.data.status !== "OK") {
             throw new Error(response.data.msg);
         }
 
@@ -41,7 +46,7 @@ class AuthService {
             }
         );
 
-        if (response.data.code !== 1000) {
+        if (response.data.status !== "OK") {
             throw new Error(response.data.msg);
         }
 
@@ -57,7 +62,7 @@ class AuthService {
             }
         );
 
-        if (response.data.code !== 1000) {
+        if (response.data.status !== "OK") {
             throw new Error(response.data.msg);
         }
 

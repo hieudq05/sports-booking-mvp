@@ -344,8 +344,6 @@ public class VenueService {
         }
 
         venue.setStatus(VenueStatus.CLOSED);
-
-        venue.setStatus(VenueStatus.CLOSED);
         venueRepository.save(venue);
     }
 
