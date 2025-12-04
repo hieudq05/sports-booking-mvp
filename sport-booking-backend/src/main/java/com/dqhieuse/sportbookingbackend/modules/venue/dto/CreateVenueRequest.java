@@ -26,6 +26,6 @@ public record CreateVenueRequest (
         @NotNull(message = "Close time is required")
         LocalTime closeTime,
 
-        @NotNull(message = "Image description is required")
+        @NotNull(message = "Images are required")
         List<String> images
 ) {}
