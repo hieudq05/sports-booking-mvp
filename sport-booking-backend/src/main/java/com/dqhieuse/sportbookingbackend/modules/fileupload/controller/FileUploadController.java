@@ -16,7 +16,7 @@ class FileUploadController {
 
     @PostMapping("/upload")
     public ApiResponse<FileUploadResponse> uploadFile(
-            @RequestParam("file")MultipartFile file
+            @RequestParam("file") MultipartFile file
             ) {
         String publicUrl = fileUploadService.uploadFile(file);
 
