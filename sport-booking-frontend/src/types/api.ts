@@ -1,4 +1,5 @@
 export interface ApiResponse<T> {
+    status: number | string;
     code: number;
     msg: string;
     data: T;
@@ -13,7 +14,7 @@ export interface PageData<T> {
 }
 
 export interface PageResponse<T> {
-    code: number;
+    code: number | string;
     msg: string;
     data: PageData<T>;
 }

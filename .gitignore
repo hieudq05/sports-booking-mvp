@@ -22,6 +22,7 @@ Thumbs.db
 # =======================================================
 # Thư mục chứa data database khi chạy docker-compose
 postgres-data/
+/sport-booking-backend/uploads/
 
 # =======================================================
 # 4. BACKEND - JAVA / MAVEN

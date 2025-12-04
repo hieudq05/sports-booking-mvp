@@ -15,11 +15,13 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -83,14 +85,20 @@ public class AuthService {
 
             String refreshToken = jwtUtils.generateRefreshToken(userDetails);
 
+            String userRole = userDetails.getAuthorities().stream()
+                    .findFirst()
+                    .map(GrantedAuthority::getAuthority)
+                    .orElse(null);
+
             return LoginResponse.builder()
                     .token(token)
                     .refreshToken(refreshToken)
                     .username(userDetails.getUsername())
-                    .role(userDetails.getAuthorities().iterator().next().getAuthority())
+                    .role(userRole)
                     .build();
 
         } catch (AuthenticationException e) {
+            log.error("Authentication failed: {}", e.getMessage());
             throw new AppException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
     }

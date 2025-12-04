@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 export const LoginPage = () => {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-8 pt-12 px-4 bg-[url('/src/assets/image/login-bg.jpg')] bg-cover bg-center bg-no-repeat">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-8 pt-12 px-4">
       <Card className="w-full max-w-lg">
         <CardHeader>
           <CardTitle className="text-2xl text-center">Đăng nhập</CardTitle>
