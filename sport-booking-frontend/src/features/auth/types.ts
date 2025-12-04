@@ -1,5 +1,5 @@
-export type Role = 'USER' | 'VENDOR' | 'ADMIN';
-export type UserStatus = 'ACTIVE' | 'BANNED' | 'UNVERIFIED';
+export type Role = "USER" | "VENDOR" | "ADMIN";
+export type UserStatus = "ACTIVE" | "BANNED" | "UNVERIFIED";
 
 export interface LoginRequest {
     username: string;

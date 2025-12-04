@@ -2,9 +2,9 @@ package com.dqhieuse.sportbookingbackend.modules.venue.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.List;
 
 public record CreateVenueRequest (
         @NotBlank(message = "Venue name is required")
@@ -24,5 +24,8 @@ public record CreateVenueRequest (
         LocalTime openTime,
 
         @NotNull(message = "Close time is required")
-        LocalTime closeTime
+        LocalTime closeTime,
+
+        @NotNull(message = "Image description is required")
+        List<String> images
 ) {}

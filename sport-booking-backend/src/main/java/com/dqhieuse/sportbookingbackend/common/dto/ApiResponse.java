@@ -2,6 +2,7 @@ package com.dqhieuse.sportbookingbackend.common.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -12,7 +13,7 @@ import lombok.*;
 public class ApiResponse<T> {
 
     @Builder.Default
-    private int code = 1000;
+    private HttpStatus status = HttpStatus.OK;
     private String msg = "Success";
     private T data;
 
@@ -34,16 +35,25 @@ public class ApiResponse<T> {
     // Success created with default created code and return data, msg
     public static <T> ApiResponse<T> created(T data, String message) {
         return ApiResponse.<T>builder()
-                .code(201)
+                .status(HttpStatus.CREATED)
                 .msg(message)
                 .data(data)
                 .build();
     }
 
-    // Error with code, data and msg
-    public static <T> ApiResponse<T> error(T data, String message, int code) {
+    // Success with custom code and return data, msg
+    public static <T> ApiResponse<T> success(T data, String message, HttpStatus status) {
         return ApiResponse.<T>builder()
-                .code(code)
+                .status(status)
+                .msg(message)
+                .data(data)
+                .build();
+    }
+
+    // Error with custom code and return data, msg
+    public static <T> ApiResponse<T> error(T data, String message, HttpStatus status) {
+        return ApiResponse.<T>builder()
+                .status(status)
                 .msg(message)
                 .data(data)
                 .build();

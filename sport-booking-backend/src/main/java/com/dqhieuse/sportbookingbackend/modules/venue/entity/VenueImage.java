@@ -28,6 +28,7 @@ public class VenueImage {
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
+    @Builder.Default
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 

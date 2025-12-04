@@ -1,10 +1,12 @@
 package com.dqhieuse.sportbookingbackend.modules.venue.entity;
 
 import com.dqhieuse.sportbookingbackend.modules.auth.entity.User;
+import com.sun.jdi.BooleanType;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import java.time.Instant;
 import java.time.LocalTime;
@@ -18,6 +20,14 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "venues")
+@FilterDef(
+        name = "deletedVenueFilter",
+        parameters = @ParamDef(name = "isDeleted", type = Boolean.class)
+)
+@Filter(
+        name = "deletedVenueFilter",
+        condition = "is_deleted = :isDeleted"
+)
 public class Venue {
 
     @Id
@@ -62,9 +72,34 @@ public class Venue {
     @Column(name = "updated_at")
     private Instant updatedAt;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    @Builder.Default
     @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Court> courts = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VenueImage> images = new ArrayList<>();
+
+    public void addCourt(Court court) {
+        this.courts.add(court);
+        court.setVenue(this);
+    }
+
+    public void addImage(VenueImage venueImage) {
+        images.add(venueImage);
+        venueImage.setVenue(this);
+    }
+
+    public void removeCourt(Court court) {
+        this.courts.remove(court);
+        court.setVenue(null);
+    }
+
+    public void removeImage(VenueImage venueImage) {
+        this.images.remove(venueImage);
+        venueImage.setVenue(null);
+    }
 }

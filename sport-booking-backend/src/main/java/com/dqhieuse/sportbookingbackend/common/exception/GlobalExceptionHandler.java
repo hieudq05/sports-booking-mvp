@@ -1,6 +1,7 @@
 package com.dqhieuse.sportbookingbackend.common.exception;
 
 import com.dqhieuse.sportbookingbackend.common.dto.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,7 +16,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AppException.class)
     public ApiResponse<Void> handleAppException(AppException e) {
         return ApiResponse.<Void>builder()
-                .code(e.getStatus().value())
+                .status(e.getStatus())
                 .msg(e.getMessage())
                 .build();
     }
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
         String enumKey = Objects.requireNonNull(e.getFieldError()).getDefaultMessage(); // Lấy message trong DTO
 
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
-                .code(400)
+                .status(HttpStatus.BAD_REQUEST)
                 .msg(enumKey)
                 .build();
 
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleUnwantedException(Exception e) {
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
-                .code(500)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .msg("Uncategorized error: " + e.getMessage()) // Dev chỉ xem log, đừng show chi tiết cho User
                 .build();
 
