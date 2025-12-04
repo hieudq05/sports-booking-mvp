@@ -73,8 +73,14 @@ public class FileUploadService {
         try {
             String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
 
-            Path filePath = Paths.get(uploadDir).resolve(fileName);
+            Path root = Paths.get(uploadDir).toAbsolutePath().normalize();
+            Path filePath = root.resolve(fileName).normalize();
 
+            // Prevent path traversal: ensure filePath is within root
+            if (!filePath.startsWith(root)) {
+                log.warn("Attempted path traversal attack with file: {}", fileName);
+                throw new AppException(HttpStatus.BAD_REQUEST, "Invalid file path.");
+            }
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
             }
