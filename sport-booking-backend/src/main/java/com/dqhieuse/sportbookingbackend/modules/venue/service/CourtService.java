@@ -32,11 +32,7 @@ public class CourtService {
 
         Venue venue = court.getVenue();
 
-        boolean isVendor = currentUser.getRole() == Role.VENDOR;
-        boolean isCourtOwner = court.getUser().getId().equals(currentUser.getId());
-        boolean isVenueOwner = venue.getOwner().getId().equals(currentUser.getId());
-
-        boolean hasPermission = (isCourtOwner || isVenueOwner) && isVendor;
+        boolean hasPermission = isHasPermission(currentUser, court, venue);
 
         if (!hasPermission) {
             throw new AppException(HttpStatus.NOT_ACCEPTABLE, "You are not authorized to update court");
@@ -57,11 +53,7 @@ public class CourtService {
 
         Venue venue = court.getVenue();
 
-        boolean isVendor = currentUser.getRole() == Role.VENDOR;
-        boolean isCourtOwner = court.getUser().getId().equals(currentUser.getId());
-        boolean isVenueOwner = venue.getOwner().getId().equals(currentUser.getId());
-
-        boolean hasPermission = (isCourtOwner || isVenueOwner) && isVendor;
+        boolean hasPermission = isHasPermission(currentUser, court, venue);
 
         if (!hasPermission) {
             throw new AppException(HttpStatus.NOT_ACCEPTABLE, "You are not authorized to inActive court");
@@ -75,6 +67,15 @@ public class CourtService {
         courtRepository.save(court);
     }
 
+    private static boolean isHasPermission(User currentUser, Court court, Venue venue) {
+        boolean isVendor = currentUser.getRole() == Role.VENDOR;
+        boolean isCourtOwner = court.getUser().getId().equals(currentUser.getId());
+        boolean isVenueOwner = venue.getOwner().getId().equals(currentUser.getId());
+
+        boolean hasPermission = (isCourtOwner || isVenueOwner) && isVendor;
+        return hasPermission;
+    }
+
     @Transactional
     public void activateCourt(Long courtId, User currentUser) {
         Court court = courtRepository.findById(courtId).orElseThrow(
@@ -83,11 +84,7 @@ public class CourtService {
 
         Venue venue = court.getVenue();
 
-        boolean isVendor = currentUser.getRole() == Role.VENDOR;
-        boolean isCourtOwner = court.getUser().getId().equals(currentUser.getId());
-        boolean isVenueOwner = venue.getOwner().getId().equals(currentUser.getId());
-
-        boolean hasPermission = (isCourtOwner || isVenueOwner) && isVendor;
+        boolean hasPermission = isHasPermission(currentUser, court, venue);
 
         if (!hasPermission) {
             throw new AppException(HttpStatus.NOT_ACCEPTABLE, "You are not authorized to active court");
