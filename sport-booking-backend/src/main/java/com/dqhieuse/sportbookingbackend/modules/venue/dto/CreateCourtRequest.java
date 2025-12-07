@@ -21,7 +21,7 @@ public record CreateCourtRequest(
         BigDecimal pricePerHour,
 
         @NotNull(message = "Capacity is required")
-        @Min(value = 1, message = "Capacity must be greater than 0")
+        @Min(value = 1, message = "Capacity must be at least 1")
         Integer capacity,
 
         @NotBlank(message = "Thumbnail URL is required")
