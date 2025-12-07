@@ -39,7 +39,7 @@ class CourtController {
     public ApiResponse<Void> restoreCourt(@PathVariable Long courtId, @AuthenticationPrincipal User currentUser) {
         courtService.activateCourt(courtId, currentUser);
 
-        return ApiResponse.success(null, "Court restored successfully");
+        return ApiResponse.success(null, "Court activated successfully");
     }
 
     @GetMapping("/{courtId}")
