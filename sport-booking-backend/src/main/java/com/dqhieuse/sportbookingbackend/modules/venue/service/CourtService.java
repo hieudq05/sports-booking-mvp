@@ -50,7 +50,7 @@ public class CourtService {
     }
 
     @Transactional
-    public void inActiveCourt(Long courtId, User currentUser) {
+    public void inActivateCourt(Long courtId, User currentUser) {
         Court court = courtRepository.findById(courtId).orElseThrow(
                 () -> new AppException(HttpStatus.NOT_FOUND, "Court not found with id: " + courtId)
         );
@@ -76,7 +76,7 @@ public class CourtService {
     }
 
     @Transactional
-    public void activeCourt(Long courtId, User currentUser) {
+    public void activateCourt(Long courtId, User currentUser) {
         Court court = courtRepository.findById(courtId).orElseThrow(
                 () -> new AppException(HttpStatus.NOT_FOUND, "Court not found with id: " + courtId)
         );

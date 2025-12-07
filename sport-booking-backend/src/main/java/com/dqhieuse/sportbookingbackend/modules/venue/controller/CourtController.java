@@ -30,14 +30,14 @@ class CourtController {
 
     @PostMapping("/{courtId}/inactive")
     public ApiResponse<Void> inActiveCourt(@PathVariable Long courtId, @AuthenticationPrincipal User currentUser) {
-        courtService.inActiveCourt(courtId, currentUser);
+        courtService.inActivateCourt(courtId, currentUser);
 
         return ApiResponse.success(null, "Court inactivated successfully");
     }
 
     @PostMapping("/{courtId}/active")
     public ApiResponse<Void> restoreCourt(@PathVariable Long courtId, @AuthenticationPrincipal User currentUser) {
-        courtService.activeCourt(courtId, currentUser);
+        courtService.activateCourt(courtId, currentUser);
 
         return ApiResponse.success(null, "Court restored successfully");
     }
