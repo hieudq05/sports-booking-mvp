@@ -46,5 +46,32 @@ public interface VenueMapper {
 
     CourtResponse toCourtResponse(Court court);
 
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "venue", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "version", ignore = true),
+            @Mapping(target = "user", ignore = true),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true)
+    })
+    Court toCourtEntity(CreateCourtRequest createCourtRequest);
+
+    List<CourtResponse> toCourtResponseList(List<Court> courts);
+
+    CourtDetailResponse toCourtDetailResponse(Court court);
+
+    @Mappings({
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "venue", ignore = true),
+            @Mapping(target = "status", ignore = true),
+            @Mapping(target = "active", ignore = true),
+            @Mapping(target = "version", ignore = true),
+            @Mapping(target = "user", ignore = true),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true)
+    })
+    void updateCourtFromRequest(UpdateCourtRequest request, @MappingTarget Court court);
+
     VenueImageResponse toImageResponse(VenueImage venueImage);
 }

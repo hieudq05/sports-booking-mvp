@@ -4,6 +4,7 @@ import com.dqhieuse.sportbookingbackend.common.dto.ApiResponse;
 import com.dqhieuse.sportbookingbackend.common.dto.PageResponse;
 import com.dqhieuse.sportbookingbackend.modules.auth.entity.User;
 import com.dqhieuse.sportbookingbackend.modules.venue.dto.*;
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.Court;
 import com.dqhieuse.sportbookingbackend.modules.venue.service.VenueService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -104,5 +105,43 @@ class VenueController {
         venueService.softDeleteVenue(id, currentUser);
 
         return ApiResponse.success(null, "Venue deleted successfully", HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{venueId}/courts")
+    public ApiResponse<CourtResponse> createCourt(
+            @PathVariable Long venueId,
+            @Valid @RequestBody CreateCourtRequest request,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        CourtResponse createdCourt = venueService.createCourt(venueId, request, currentUser);
+
+        return ApiResponse.created(createdCourt, "Court created successfully");
+    }
+
+    @GetMapping("/{venueId}/my-courts")
+    public ApiResponse<PageResponse<CourtResponse>> getAllCourts(
+            @PathVariable Long venueId,
+            @PageableDefault(
+                    sort = {"createdAt"},
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable,
+            @AuthenticationPrincipal User currentUser
+    ) {
+        PageResponse<CourtResponse> courts = venueService.findAllCourtForOwner(venueId, pageable, currentUser);
+
+        return ApiResponse.success(courts, "Fetched all courts successfully");
+    }
+
+    @GetMapping("/{venueId}/courts")
+    public ApiResponse<PageResponse<CourtResponse>> getAllActiveCourts(
+            @PathVariable Long venueId,
+            @PageableDefault(
+                    sort = {"createdAt"},
+                    direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ) {
+        PageResponse<CourtResponse> courts = venueService.findAllActiveCourt(venueId, pageable);
+
+        return ApiResponse.success(courts, "Fetched all active courts successfully");
     }
 }
