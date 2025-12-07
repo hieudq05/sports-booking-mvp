@@ -27,9 +27,6 @@ public record CreateCourtRequest(
         @NotBlank(message = "Thumbnail URL is required")
         String thumbnail,
 
-        @NotNull(message = "Active is required")
-        Boolean active,
-
         List<String> images,
 
         @Length(max = 1000, message = "Description must be less than 1000 characters")

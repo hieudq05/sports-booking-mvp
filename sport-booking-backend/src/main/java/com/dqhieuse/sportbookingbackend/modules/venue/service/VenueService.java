@@ -399,6 +399,7 @@ public class VenueService {
         venue.addCourt(court);
         court.setUser(currentUser);
         court.setStatus(CourtStatus.PENDING);
+        court.setActive(true);
 
         Court courtAdded = courtRepository.save(court);
 
