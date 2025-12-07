@@ -9,6 +9,7 @@ public record CourtResponse(
         BigDecimal pricePerHour,
         Integer capacity,
         String thumbnail,
-        String status
+        String status,
+        Boolean active
 ) {
 }

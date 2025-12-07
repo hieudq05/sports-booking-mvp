@@ -54,6 +54,9 @@ public class Court {
     @Column(name = "active", nullable = false)
     private Boolean active = true;
 
+    @Column(name = "description", length = 1000)
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User user;

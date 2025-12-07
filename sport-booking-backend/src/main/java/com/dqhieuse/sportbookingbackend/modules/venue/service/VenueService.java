@@ -7,10 +7,9 @@ import com.dqhieuse.sportbookingbackend.modules.auth.entity.Role;
 import com.dqhieuse.sportbookingbackend.modules.auth.entity.User;
 import com.dqhieuse.sportbookingbackend.modules.fileupload.service.FileUploadService;
 import com.dqhieuse.sportbookingbackend.modules.venue.dto.*;
-import com.dqhieuse.sportbookingbackend.modules.venue.entity.Venue;
-import com.dqhieuse.sportbookingbackend.modules.venue.entity.VenueImage;
-import com.dqhieuse.sportbookingbackend.modules.venue.entity.VenueStatus;
+import com.dqhieuse.sportbookingbackend.modules.venue.entity.*;
 import com.dqhieuse.sportbookingbackend.modules.venue.mapper.VenueMapper;
+import com.dqhieuse.sportbookingbackend.modules.venue.repository.CourtRepository;
 import com.dqhieuse.sportbookingbackend.modules.venue.repository.VenueImageRepository;
 import com.dqhieuse.sportbookingbackend.modules.venue.repository.VenueRepository;
 import jakarta.persistence.EntityManager;
@@ -35,6 +34,7 @@ public class VenueService {
     private final VenueImageRepository venueImageRepository;
     private final FileUploadService fileUploadService;
     private final EntityManager entityManager;
+    private final CourtRepository courtRepository;
 
     @Transactional
     public VenueDetailResponse createVenue(CreateVenueRequest request, User currentUser) {
@@ -379,5 +379,87 @@ public class VenueService {
 
         venue.setStatus(VenueStatus.ACTIVE);
         venueRepository.save(venue);
+    }
+
+    @Transactional
+    public CourtResponse createCourt(Long venueId, CreateCourtRequest request, User currentUser) {
+        Venue venue = venueRepository.findById(venueId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Venue not found with id: " + venueId)
+        );
+
+        boolean hasPermission = venue.getOwner().getId().equals(currentUser.getId()) &&
+                (currentUser.getRole() == Role.VENDOR || currentUser.getRole() == Role.ADMIN);
+
+        if (!hasPermission) {
+            throw new AppException(HttpStatus.NOT_ACCEPTABLE, "You are not authorized to create court");
+        }
+
+        Court court = venueMapper.toCourtEntity(request);
+
+        venue.addCourt(court);
+        court.setUser(currentUser);
+        court.setStatus(CourtStatus.PENDING);
+        court.setActive(true);
+
+        Court courtAdded = courtRepository.save(court);
+
+        return venueMapper.toCourtResponse(courtAdded);
+    }
+
+    public PageResponse<CourtResponse> findAllCourtForOwner(Long venueId, Pageable pageable, User currentUser) {
+        Venue venue = venueRepository.findById(venueId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Venue not found with id: " + venueId)
+        );
+
+        boolean hasPermission = venue.getOwner().getId().equals(currentUser.getId()) &&
+                (currentUser.getRole() == Role.VENDOR);
+
+        if (!hasPermission) {
+            throw new AppException(HttpStatus.NOT_ACCEPTABLE, "You are not authorized to view courts");
+        }
+
+        Page<Court> courts = courtRepository.findAllByUserAndVenue(currentUser, venue, pageable);
+
+        List<CourtResponse> courtResponses = venueMapper.toCourtResponseList(courts.getContent());
+
+        MetaResponse meta = MetaResponse.builder()
+                .pageNo(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalElements(courts.getTotalElements())
+                .totalPages(courts.getTotalPages())
+                .build();
+
+        return PageResponse.<CourtResponse>builder()
+                .content(courtResponses)
+                .meta(meta)
+                .build();
+    }
+
+    public PageResponse<CourtResponse> findAllActiveCourt(Long venueId, Pageable pageable) {
+        Venue venue = venueRepository.findById(venueId).orElseThrow(
+                () -> new AppException(HttpStatus.NOT_FOUND, "Venue not found with id: " + venueId)
+        );
+
+        if (venue.getStatus() != VenueStatus.ACTIVE || venue.isDeleted()) {
+            throw new AppException(HttpStatus.NOT_FOUND, "Venue is not active or deleted");
+        }
+
+        List<CourtStatus> allowedStatuses = List.of(CourtStatus.BOOKED, CourtStatus.AVAILABLE);
+
+        Page<Court> courts = courtRepository.findAllByVenueAndActiveAndStatusIn(venue, true, allowedStatuses, pageable);
+
+        List<CourtResponse> courtResponses = venueMapper.toCourtResponseList(courts.getContent());
+
+        MetaResponse meta = MetaResponse.builder()
+                .pageNo(pageable.getPageNumber())
+                .pageSize(pageable.getPageSize())
+                .totalElements(courts.getTotalElements())
+                .totalPages(courts.getTotalPages())
+                .build();
+
+        return PageResponse.<CourtResponse>builder()
+                .content(courtResponses)
+                .meta(meta)
+                .build();
     }
 }
